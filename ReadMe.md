@@ -13,11 +13,11 @@
 
 1. Клонировать репозиторий
    ```sh
-   git clone https://github.com/MarinaKrasnoruzhskaya/home_work_19_2
+   git clone https://github.com/MarinaKrasnoruzhskaya/django_shop
    ```
-2. Перейти в директорию home_work_19_2
+2. Перейти в директорию django_shop
    ```sh
-   cd home_work_19_2
+   cd django_shop
    ```
 3. Установить виртуальное окружение
    ```sh
@@ -80,7 +80,7 @@
 Марина Красноружская - krasnoruzhskayamarina@yandex.ru
 
 Ссылка на
-проект: [https://github.com/MarinaKrasnoruzhskaya/home_work_19_2](https://github.com/MarinaKrasnoruzhskaya/home_work_19_2)
+проект: [https://github.com/MarinaKrasnoruzhskaya/django_shop](https://github.com/MarinaKrasnoruzhskaya/django_shop)
 
 <p align="right">(<a href="#readme-top">Наверх</a>)</p>
 
