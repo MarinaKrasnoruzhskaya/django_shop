@@ -29,6 +29,19 @@
    ```sh
    pip install -r requirements.tx
    ```
+6. Создать файл ```.env``` следующего содержания:
+   ```
+   DB_USER=local_db_user
+   DB_PASSWORD=local_db_password
+   DB_HOST=local_db_host
+   DB_PORT=local_db_port
+   ```
+7. Создать БД ```bantiki```, для этого в терминале Pycharm ввести следующие команды
+   ```
+   psql -U postgres
+   create database bowshop;  
+   \q
+   ```
 
 Руководство по использованию
 ---------------
