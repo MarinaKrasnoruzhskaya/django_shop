@@ -41,7 +41,7 @@ class Product(models.Model):
         **NULLABLE,
     )
     preview = models.ImageField(
-        upload_to=MEDIA_URL,
+        upload_to='products',
         verbose_name="Изображение",
         help_text="Загрузите изображение продукта",
         **NULLABLE,
