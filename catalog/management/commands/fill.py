@@ -35,14 +35,14 @@ class Command(BaseCommand):
         return products
 
     @staticmethod
-    def truncate_table_restart_id(model):
+    def truncate_table_restart_id(name_model):
         with connection.cursor() as cursor:
-            cursor.execute(f'TRUNCATE TABLE catalog_{model} RESTART IDENTITY CASCADE')
+            cursor.execute(f'TRUNCATE TABLE catalog_{name_model} RESTART IDENTITY CASCADE')
 
     @staticmethod
-    def select_setval_id(model):
+    def select_setval_id(name_model):
         with connection.cursor() as cursor:
-            cursor.execute(f"SELECT SETVAL('catalog_{model}_id_seq', (SELECT MAX(id) FROM catalog_{model}));")
+            cursor.execute(f"SELECT SETVAL('catalog_{name_model}_id_seq', (SELECT MAX(id) FROM catalog_{name_model}));")
 
     def handle(self, *args, **options):
 
