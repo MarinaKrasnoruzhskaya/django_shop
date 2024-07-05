@@ -3,7 +3,7 @@ from catalog.models import Product, Category
 
 
 @admin.register(Category)
-class BreedAdmin(admin.ModelAdmin):
+class CategoryAdmin(admin.ModelAdmin):
     list_display = ('id', 'name')
 
 

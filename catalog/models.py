@@ -19,11 +19,6 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
-    @classmethod
-    def truncate_table_restart_id(cls):
-        with connection.cursor() as cursor:
-            cursor.execute(f'TRUNCATE TABLE {cls._meta.db_table} RESTART IDENTITY CASCADE')
-
     class Meta:
         verbose_name = "Категория"
         verbose_name_plural = "Категории"
@@ -41,7 +36,7 @@ class Product(models.Model):
         **NULLABLE,
     )
     preview = models.ImageField(
-        upload_to=MEDIA_URL,
+        upload_to='products',
         verbose_name="Изображение",
         help_text="Загрузите изображение продукта",
         **NULLABLE,

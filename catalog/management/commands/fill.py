@@ -1,6 +1,7 @@
 import json
 
 from django.core.management import BaseCommand
+from django.db import connection
 
 from catalog.models import Product, Category
 
@@ -33,11 +34,22 @@ class Command(BaseCommand):
 
         return products
 
+    @staticmethod
+    def truncate_table_restart_id(name_model):
+        with connection.cursor() as cursor:
+            cursor.execute(f'TRUNCATE TABLE catalog_{name_model} RESTART IDENTITY CASCADE')
+
+    @staticmethod
+    def select_setval_id(name_model):
+        with connection.cursor() as cursor:
+            cursor.execute(f"SELECT SETVAL('catalog_{name_model}_id_seq', (SELECT MAX(id) FROM catalog_{name_model}));")
+
     def handle(self, *args, **options):
 
         Product.objects.all().delete()
         Category.objects.all().delete()
-        Category.truncate_table_restart_id()
+        Command.truncate_table_restart_id('product')
+        Command.truncate_table_restart_id('category')
 
         product_for_create = []
         category_for_create = []
@@ -49,6 +61,7 @@ class Command(BaseCommand):
             )
 
         Category.objects.bulk_create(category_for_create)
+        Command.select_setval_id('category')
 
         for product in Command.json_read_products():
             product_for_create.append(
@@ -60,3 +73,4 @@ class Command(BaseCommand):
             )
 
         Product.objects.bulk_create(product_for_create)
+        Command.select_setval_id('product')
