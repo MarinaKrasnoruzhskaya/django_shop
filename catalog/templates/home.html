@@ -23,39 +23,22 @@
 
 <div class="container">
     <div class="row text-center">
+        {% for product in products %}
         <div class="col-4">
             <div class="card mb-4 box-shadow">
                 <div class="card-header">
-                    <h5 class="my-0 font-weight-normal">Бантики из ленты</h5>
+                    <h5 class="my-0 font-weight-normal">{{ product.name }}</h5>
                 </div>
                 <img src="/static/images/1.jpg" class="card-img-top" alt="...">
                 <div class="card-body">
+                    <p class="card-text"><i>{{ product.category }}</i></p>
+                    <p class="card-text">{{ product.description | truncatechars:100 }}</p>
+                    <p class="card-text">Цена: {{ product.price }} руб.</p>
                     <button type="button" class="btn btn-lg btn-block btn-outline-danger">Выбрать</button>
                 </div>
             </div>
         </div>
-        <div class="col-4">
-            <div class="card mb-4 box-shadow">
-                <div class="card-header">
-                    <h5 class="my-0 font-weight-normal">Бантики из фоамирана</h5>
-                </div>
-                <img src="/static/images/2.jpg" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <button type="button" class="btn btn-lg btn-block btn-outline-danger">Выбрать</button>
-                </div>
-            </div>
-        </div>
-         <div class="col-4">
-            <div class="card mb-4 box-shadow">
-                <div class="card-header">
-                    <h5 class="my-0 font-weight-normal">Бантики на зажимах</h5>
-                </div>
-                <img src="/static/images/3.jpg" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <button type="button" class="btn btn-lg btn-block btn-outline-danger">Выбрать</button>
-                </div>
-            </div>
-        </div>
+        {% endfor %}
     </div>
 
     <footer class="pt-4 my-md-5 pt-md-5 border-top">
