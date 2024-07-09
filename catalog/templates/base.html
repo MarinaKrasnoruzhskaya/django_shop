@@ -1,0 +1,60 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bow-shop</title>
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+</head>
+<body>
+{% include 'includes/inc_menu.html' %}
+
+{% block content %}
+{% endblock %}
+
+
+<footer class="pt-4 my-md-5 pt-md-5 border-top">
+
+    <div class="container py-4 py-md-5 px-4 px-md-3 text-body-secondary">
+        <div class="row">
+            <div class="col-6 col-md">
+                Bow-shop
+                <small class="d-block mb-3 text-muted">&copy; 2024</small>
+            </div>
+            <div class="col-6 col-md">
+                <h5>Информация</h5>
+                <ul class="list-unstyled text-small">
+                    <li><a class="text-muted" href="#">О нас</a></li>
+                    <li><a class="text-muted" href="#">Способы доставки</a></li>
+                    <li><a class="text-muted" href="#">Оплата</a></li>
+                    <li><a class="text-muted" href="#">FAQ</a></li>
+                    <li><a class="text-muted" href="/contacts/">Контакты</a></li>
+                </ul>
+            </div>
+            <div class="col-6 col-md">
+                <h5>Категории</h5>
+                <ul class="list-unstyled text-small">
+                    <li><a class="text-muted" href="#">Бантики из ленты</a></li>
+                    <li><a class="text-muted" href="#">Бантики из фоамирана</a></li>
+                    <li><a class="text-muted" href="#">Бантики на зажимах</a></li>
+                </ul>
+            </div>
+            <div class="col-6 col-md">
+                <h5>Режим работы</h5>
+                <ul class="list-unstyled text-small">
+                    <li>Пн-Пт: с 9:00 до 17:00</li>
+                    <li>Сб-Вс: выходной</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+<script src="{% static 'js/f208797f1d.js' %}"></script>
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+
+
+</body>
+</html>
