@@ -1,5 +1,4 @@
-from django.db import models, connection
-from config.settings import MEDIA_URL
+from django.db import models
 
 NULLABLE = {'blank': True, 'null': True}
 
@@ -62,3 +61,4 @@ class Product(models.Model):
     class Meta:
         verbose_name = "Продукт"
         verbose_name_plural = "Продукты"
+        ordering = ('name',)
