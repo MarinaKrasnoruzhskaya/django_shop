@@ -14,23 +14,23 @@
                     <img src="{{ product.preview | media_filter }}" class="img-fluid rounded-start" alt="...">
                 </div>
                 <div class="col-md-6">
-                    <div class="card-body text-left">
+                    <div class="card-body">
                         <div class="row">
                             <div class="col-md-4">
                                 <h2 class="card-title"><b>{{ product.price}} Руб.</b></h2>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-3">
                                 <div class="btn-group">
                                     <a class="btn btn-danger" href="№" role="button">В корзину</a>
                                 </div>
                             </div>
                         </div>
                         <p class="card-text text-start"><b>Описание:</b> </p>
-                        <p class="card-text text-start">{{ product.description | linebreaks }}</p>
+                        <div class="text-start"><p class="card-text">{{ product.description | linebreaks }}</p></div>
                         <p class="card-text text-start">Дата создания: {{ product.created_at | date:"SHORT_DATE_FORMAT" }}</p>
                         <p class="card-text text-start"><small class="text-body-secondary">Последнее обновление {{ product.updated_at }}</small></p>
-                        <div class="btn-group">
-                            <a class="btn btn-outline-danger" href="{% url 'catalog:home' %}" role="button">Назад</a>
+                        <div class="d-flex justify-content-start">
+                            <a class="btn btn-outline-danger me-md-2" href="{% url 'catalog:home' %}" role="button">Назад</a>
                         </div>
                     </div>
                 </div>
