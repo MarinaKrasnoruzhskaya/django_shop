@@ -1,5 +1,4 @@
-from django.db import models, connection
-from config.settings import MEDIA_URL
+from django.db import models
 
 NULLABLE = {'blank': True, 'null': True}
 
