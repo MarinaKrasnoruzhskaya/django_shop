@@ -19,7 +19,9 @@
                     <p class="card-text"><i>{{ product.category }}</i></p>
                     <p class="card-text">{{ product.description | truncatechars:100 }}</p>
                     <p class="card-text">Цена: {{ product.price }} руб.</p>
-                    <button type="button" class="btn btn-lg btn-block btn-outline-danger">Выбрать</button>
+                    <div class="btn-group">
+                        <a class="btn btn-outline-danger" href="{% url 'catalog:product_detail' product.pk %}" role="button">Подробнее</a>
+                    </div>
                 </div>
             </div>
         </div>
