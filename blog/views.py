@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from pytils.translit import slugify
@@ -43,7 +43,7 @@ class BlogPostCreateView(CreateView):
 class BlogPostUpdateView(UpdateView):
     model = BlogPost
     fields = ('title', 'content', 'preview', 'is_published')
-    success_url = reverse_lazy("blog:list")
+    # success_url = reverse_lazy("blog:list")
 
     def form_valid(self, form):
         if form.is_valid():
@@ -52,6 +52,9 @@ class BlogPostUpdateView(UpdateView):
             new_post.save()
 
         return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('blog:view', args=[self.kwargs.get('pk')])
 
 
 class BlogPostDeleteView(DeleteView):
