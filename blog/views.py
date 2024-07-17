@@ -10,6 +10,11 @@ from blog.models import BlogPost
 class BlogPostListView(ListView):
     model = BlogPost
 
+    def get_queryset(self, *args, **kwargs):
+        queryset = super().get_queryset(*args, **kwargs)
+        queryset = queryset.filter(is_published=True)
+        return queryset
+
 
 class BlogPostDetailView(DetailView):
     model = BlogPost
