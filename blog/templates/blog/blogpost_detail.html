@@ -12,6 +12,7 @@
                             <img src="{{ object.preview | media_filter }}" class="img-fluid rounded-start" alt="...">
                         {% endif %}
                         <p class="text-justify">{{ object.content | linebreaks }}</p>
+                        <p class="text-justify">Просмотры: {{object.views_count }}
                     </div>
                 </div>
                 <a class="btn btn-outline-danger me-md-2" href="{% url 'blog:list' %}" role="button">Назад</a>
