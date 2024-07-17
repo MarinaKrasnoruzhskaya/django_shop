@@ -1,0 +1,21 @@
+{% extends 'catalog/base.html' %}
+{% load my_tags %}
+{% block content %}
+    <div class="container">
+        <div class="row g-5">
+            <article class="blog-post">
+                <h2 class="display-5 link-body-emphasis mb-1">{{ object.title }} ({{ object.slug }})</h2>
+                <p class="mb-1 text-danger">{{ object.created_at | date:"SHORT_DATE_FORMAT" }}</p>
+                <div class="row g-0">
+                    <div class="col-8">
+                        {% if object.preview %}
+                            <img src="{{ object.preview | media_filter }}" class="img-fluid rounded-start" alt="...">
+                        {% endif %}
+                        <p class="text-justify">{{ object.content | linebreaks }}</p>
+                    </div>
+                </div>
+                <a class="btn btn-outline-danger me-md-2" href="{% url 'blog:list' %}" role="button">Назад</a>
+            </article>
+        </div>
+    </div>
+{% endblock %}
