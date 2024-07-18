@@ -3,14 +3,15 @@ import json
 from django.core.management import BaseCommand
 from django.db import connection
 
+from blog.models import BlogPost
 from catalog.models import Product, Category
 
 
 class Command(BaseCommand):
 
     @staticmethod
-    def json_read():
-        with open('data.json', 'r', encoding='utf-8') as file:
+    def json_read(name_file):
+        with open(name_file, 'r', encoding='utf-8') as file:
             data = json.load(file)
         return data
 
@@ -18,7 +19,7 @@ class Command(BaseCommand):
     def json_read_categories():
         categories = []
 
-        for item in Command.json_read():
+        for item in Command.json_read('catalog_data.json'):
             if item["model"] == "catalog.category":
                 categories.append(item)
 
@@ -28,28 +29,28 @@ class Command(BaseCommand):
     def json_read_products():
         products = []
 
-        for item in Command.json_read():
+        for item in Command.json_read('catalog_data.json'):
             if item["model"] == "catalog.product":
                 products.append(item)
 
         return products
 
     @staticmethod
-    def truncate_table_restart_id(name_model):
+    def truncate_table_restart_id(name_app, name_model):
         with connection.cursor() as cursor:
-            cursor.execute(f'TRUNCATE TABLE catalog_{name_model} RESTART IDENTITY CASCADE')
+            cursor.execute(f'TRUNCATE TABLE {name_app}_{name_model} RESTART IDENTITY CASCADE')
 
     @staticmethod
-    def select_setval_id(name_model):
+    def select_setval_id(name_app, name_model):
         with connection.cursor() as cursor:
-            cursor.execute(f"SELECT SETVAL('catalog_{name_model}_id_seq', (SELECT MAX(id) FROM catalog_{name_model}));")
+            cursor.execute(f"SELECT SETVAL('{name_app}_{name_model}_id_seq', (SELECT MAX(id) FROM {name_app}_{name_model}));")
 
     def handle(self, *args, **options):
 
         Product.objects.all().delete()
         Category.objects.all().delete()
-        Command.truncate_table_restart_id('product')
-        Command.truncate_table_restart_id('category')
+        Command.truncate_table_restart_id('catalog', 'product')
+        Command.truncate_table_restart_id('catalog','category')
 
         product_for_create = []
         category_for_create = []
@@ -61,7 +62,7 @@ class Command(BaseCommand):
             )
 
         Category.objects.bulk_create(category_for_create)
-        Command.select_setval_id('category')
+        Command.select_setval_id('catalog','category')
 
         for product in Command.json_read_products():
             product_for_create.append(
@@ -73,4 +74,18 @@ class Command(BaseCommand):
             )
 
         Product.objects.bulk_create(product_for_create)
-        Command.select_setval_id('product')
+        Command.select_setval_id('catalog','product')
+
+        BlogPost.objects.all().delete()
+        Command.truncate_table_restart_id('blog', 'blogpost')
+
+        blogpost_for_create = []
+        for blogpost in Command.json_read('blog_data.json'):
+            blogpost_for_create.append(
+                BlogPost(id=blogpost["pk"], title=blogpost["fields"]["title"], content=blogpost["fields"]["content"],
+                         preview=blogpost["fields"]["preview"], is_published=blogpost["fields"]["is_published"],
+                         views_count=blogpost["fields"]["views_count"], created_at=blogpost["fields"]["created_at"])
+            )
+
+        BlogPost.objects.bulk_create(blogpost_for_create)
+        Command.select_setval_id('blog', 'blogpost')
