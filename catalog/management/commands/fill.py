@@ -43,14 +43,15 @@ class Command(BaseCommand):
     @staticmethod
     def select_setval_id(name_app, name_model):
         with connection.cursor() as cursor:
-            cursor.execute(f"SELECT SETVAL('{name_app}_{name_model}_id_seq', (SELECT MAX(id) FROM {name_app}_{name_model}));")
+            cursor.execute(
+                f"SELECT SETVAL('{name_app}_{name_model}_id_seq', (SELECT MAX(id) FROM {name_app}_{name_model}));")
 
     def handle(self, *args, **options):
 
         Product.objects.all().delete()
         Category.objects.all().delete()
         Command.truncate_table_restart_id('catalog', 'product')
-        Command.truncate_table_restart_id('catalog','category')
+        Command.truncate_table_restart_id('catalog', 'category')
 
         product_for_create = []
         category_for_create = []
@@ -62,7 +63,7 @@ class Command(BaseCommand):
             )
 
         Category.objects.bulk_create(category_for_create)
-        Command.select_setval_id('catalog','category')
+        Command.select_setval_id('catalog', 'category')
 
         for product in Command.json_read_products():
             product_for_create.append(
@@ -74,7 +75,7 @@ class Command(BaseCommand):
             )
 
         Product.objects.bulk_create(product_for_create)
-        Command.select_setval_id('catalog','product')
+        Command.select_setval_id('catalog', 'product')
 
         BlogPost.objects.all().delete()
         Command.truncate_table_restart_id('blog', 'blogpost')
@@ -82,9 +83,10 @@ class Command(BaseCommand):
         blogpost_for_create = []
         for blogpost in Command.json_read('blog_data.json'):
             blogpost_for_create.append(
-                BlogPost(id=blogpost["pk"], title=blogpost["fields"]["title"], content=blogpost["fields"]["content"],
-                         preview=blogpost["fields"]["preview"], is_published=blogpost["fields"]["is_published"],
-                         views_count=blogpost["fields"]["views_count"], created_at=blogpost["fields"]["created_at"])
+                BlogPost(id=blogpost["pk"], title=blogpost["fields"]["title"], slug=blogpost["fields"]["slug"],
+                         content=blogpost["fields"]["content"], preview=blogpost["fields"]["preview"],
+                         is_published=blogpost["fields"]["is_published"], views_count=blogpost["fields"]["views_count"],
+                         created_at=blogpost["fields"]["created_at"])
             )
 
         BlogPost.objects.bulk_create(blogpost_for_create)
