@@ -1,9 +1,17 @@
+import os
+
+from django.conf import settings
+from django.core.mail import send_mail
 from django.urls import reverse_lazy, reverse
 
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from dotenv import load_dotenv
 from pytils.translit import slugify
 
 from blog.models import BlogPost
+
+
+load_dotenv()
 
 
 class BlogPostListView(ListView):
@@ -22,6 +30,14 @@ class BlogPostDetailView(DetailView):
         self.object = super().get_object(queryset)
         self.object.views_count += 1
         self.object.save()
+        if self.object.views_count == 100:
+            send_mail(
+                subject="Новое достижение",
+                message=f"Поздравляем! Вашу запись {self.object.title} просмотрели {self.object.views_count} раз. "
+                        f"С уважением Ваш Bow-shop!",
+                from_email=settings.EMAIL_HOST_USER,
+                recipient_list=[os.getenv("EMAIL_USER"),],
+            )
         return self.object
 
 
