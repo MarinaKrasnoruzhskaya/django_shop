@@ -4,7 +4,7 @@ from django.core.management import BaseCommand
 from django.db import connection
 
 from blog.models import BlogPost
-from catalog.models import Product, Category
+from catalog.models import Product, Category, Contact
 
 
 class Command(BaseCommand):
@@ -16,24 +16,14 @@ class Command(BaseCommand):
         return data
 
     @staticmethod
-    def json_read_categories():
-        categories = []
+    def json_read_data(name_app, name_model):
+        data = []
 
         for item in Command.json_read('catalog_data.json'):
-            if item["model"] == "catalog.category":
-                categories.append(item)
+            if item["model"] == f"{name_app}.{name_model}":
+                data.append(item)
 
-        return categories
-
-    @staticmethod
-    def json_read_products():
-        products = []
-
-        for item in Command.json_read('catalog_data.json'):
-            if item["model"] == "catalog.product":
-                products.append(item)
-
-        return products
+        return data
 
     @staticmethod
     def truncate_table_restart_id(name_app, name_model):
@@ -50,13 +40,16 @@ class Command(BaseCommand):
 
         Product.objects.all().delete()
         Category.objects.all().delete()
+        Contact.objects.all().delete()
         Command.truncate_table_restart_id('catalog', 'product')
         Command.truncate_table_restart_id('catalog', 'category')
+        Command.truncate_table_restart_id('catalog', 'contact')
 
         product_for_create = []
         category_for_create = []
+        contact_for_create = []
 
-        for category in Command.json_read_categories():
+        for category in Command.json_read_data('catalog', 'category'):
             category_for_create.append(
                 Category(id=category["pk"], name=category["fields"]["name"],
                          description=category["fields"]["description"])
@@ -65,7 +58,7 @@ class Command(BaseCommand):
         Category.objects.bulk_create(category_for_create)
         Command.select_setval_id('catalog', 'category')
 
-        for product in Command.json_read_products():
+        for product in Command.json_read_data('catalog', 'product'):
             product_for_create.append(
                 Product(id=product["pk"], name=product["fields"]["name"], description=product["fields"]["description"],
                         preview=product["fields"]["preview"],
@@ -76,6 +69,15 @@ class Command(BaseCommand):
 
         Product.objects.bulk_create(product_for_create)
         Command.select_setval_id('catalog', 'product')
+
+        for contact in Command.json_read_data('catalog', 'contact'):
+            contact_for_create.append(
+                Contact(id=contact["pk"], name=contact["fields"]["name"], phone=contact["fields"]["phone"],
+                         message=contact["fields"]["message"])
+            )
+
+        Contact.objects.bulk_create(contact_for_create)
+        Command.select_setval_id('catalog', 'contact')
 
         BlogPost.objects.all().delete()
         Command.truncate_table_restart_id('blog', 'blogpost')

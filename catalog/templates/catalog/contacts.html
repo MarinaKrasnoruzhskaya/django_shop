@@ -56,5 +56,28 @@
         </div>
     </div>
 </div>
+<div class="container">
+    <h4 class="my-0 font-weight-normal">Контактные данные</h4>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Имя</th>
+            <th scope="col">Телефон</th>
+            <th scope="col">Сообщение</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for object in latest_contacts %}
+        <tr>
+            <th scope="row">{{ object.id }}</th>
+            <td>{{ object.name }}</td>
+            <td>{{ object.phone }}</td>
+            <td>{{ object.message }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
 
 {% endblock %}

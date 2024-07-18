@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
 
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
@@ -33,7 +32,7 @@ class BlogPostCreateView(CreateView):
 
     def form_valid(self, form):
         if form.is_valid():
-            new_post= form.save()
+            new_post = form.save()
             new_post.slug = slugify(new_post.title)
             new_post.save()
 
@@ -43,7 +42,6 @@ class BlogPostCreateView(CreateView):
 class BlogPostUpdateView(UpdateView):
     model = BlogPost
     fields = ('title', 'content', 'preview', 'is_published')
-    # success_url = reverse_lazy("blog:list")
 
     def form_valid(self, form):
         if form.is_valid():
