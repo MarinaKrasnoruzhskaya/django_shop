@@ -60,8 +60,8 @@
     ```sh
    python manage.py fill
    ```
-10. В файле ``.env``` добавить настройки для яндекс-почты
-    ```
+10. В файле ```.env``` добавить настройки для яндекс-почты
+   ```
     EMAIL_HOST_USER = your_email@yandex.ru
     EMAIL_HOST_PASSWORD = your_yandex_smtp_password
     EMAIL_USER = user_email@yandex.ru
