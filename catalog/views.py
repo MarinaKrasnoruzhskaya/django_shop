@@ -1,6 +1,7 @@
+from django.shortcuts import render
 from django.views.generic import ListView, DetailView, TemplateView
 
-from catalog.models import Product
+from catalog.models import Product, Contact
 
 
 class ProductListView(ListView):
@@ -12,15 +13,20 @@ class ContactsView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # context["latest_articles"] = Article.objects.all()[:5]
+        context["latest_contacts"] = Contact.objects.all()[:5]
         return context
-# def contacts(request):
-#     if request.method == 'POST':
-#         name = request.POST.get('name')
-#         phone = request.POST.get('phone')
-#         message = request.POST.get('message')
-#         print(f"{name} ({phone}): {message}")
-#     return render(request, 'catalog/contacts.html')
+
+    def post(self, request, **kwargs):
+        if request.method == 'POST':
+            contact = Contact()
+            contact.name = request.POST.get('name')
+            contact.phone = request.POST.get('phone')
+            contact.message = request.POST.get('message')
+            contact.save()
+
+        context = self.get_context_data(**kwargs)
+
+        return self.render_to_response(context)
 
 
 class ProductDetailView(DetailView):
