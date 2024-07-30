@@ -1,0 +1,31 @@
+{% extends 'catalog/base.html' %}
+{% block content %}
+<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+    <h1 class="display-4">Bow-shop</h1>
+    <p class="lead">Bow-shop - бантики для первых хвостиков и косичек</p>
+</div>
+<div class="container">
+    <form class="row" method="post" enctype="multipart/form-data">
+        <div class="col-6">
+            {% if object %}
+            <h3 class="card-text">Редактирование продукта</h3>
+            {% else %}
+            <h3 class="card-text">Создание продукта</h3>
+            {% endif %}
+            <div class="card">
+                <div class="card-body">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                </div>
+                <button type="submit" class="btn btn-danger">
+                    {% if object %}
+                    Обновить
+                    {% else %}
+                    Создать
+                    {% endif %}
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
