@@ -20,6 +20,7 @@
                 <img src="{{ product.preview | media_filter }}" class="card-img-top" alt="...">
                 <div class="card-body">
                     <p class="card-text"><i>{{ product.category }}</i></p>
+                    <p class="card-text">Версия: {{ product.active_version.name_version }}</p>
                     <p class="card-text">{{ product.description | truncatechars:100 }}</p>
                     <p class="card-text">Цена: {{ product.price }} руб.</p>
                     <div class="btn-group">
