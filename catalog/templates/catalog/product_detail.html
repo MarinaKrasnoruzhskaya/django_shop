@@ -25,10 +25,20 @@
                                 </div>
                             </div>
                         </div>
-                        <p class="card-text text-start"><b>Описание:</b> </p>
-                        <div class="text-start"><p class="card-text">{{ product.description | linebreaks }}</p></div>
-                        <p class="card-text text-start">Дата создания: {{ product.created_at | date:"SHORT_DATE_FORMAT" }}</p>
-                        <p class="card-text text-start"><small class="text-body-secondary">Последнее обновление {{ product.updated_at }}</small></p>
+                        <p class="card-text text-left"><b>Описание:</b></p>
+                        <div class="text-left"><p class="card-text">{{ product.description | linebreaks }}</p></div>
+                        <p class="card-text text-left">Дата создания: {{ product.created_at | date:"SHORT_DATE_FORMAT" }}</p>
+                        <p class="card-text text-left"><small class="text-body-secondary">Последнее обновление {{ product.updated_at }}</small></p>
+                        <p class="card-text text-left"><b>Версии продукта:</b></p>
+                        {% for version in versions %}
+                        <UL>
+                            <LI>{% if version.is_current_version %}
+                                <b><p class="card-text text-left">{{ version.name_version }}</p></b>
+                            {% else %}
+                                <p class="card-text text-left">{{ version.name_version }}</p>
+                            {% endif %}
+                        </UL>
+                        {% endfor %}
                         <div class="d-flex justify-content-start">
                             <a class="btn btn-outline-danger me-md-2" href="{% url 'catalog:home' %}" role="button">Назад</a>
                         </div>

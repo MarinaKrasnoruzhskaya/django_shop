@@ -25,8 +25,14 @@ class ProductListView(ListView):
 
 
 class ProductDetailView(DetailView):
-    """Контроллер для просмотра конкретного продукта"""
+    """Контроллер для просмотра конкретного продукта и его версий"""
     model = Product
+
+    def get_context_data(self, **kwargs):
+        """Метод для получения данных о продукте и его версиях"""
+        context_data = super().get_context_data(**kwargs)
+        context_data['versions'] = Version.objects.filter(product=self.object)
+        return context_data
 
 
 class ProductCreateView(CreateView):
@@ -42,6 +48,7 @@ class ProductUpdateView(UpdateView):
     form_class = ProductForm
 
     def get_context_data(self, **kwargs):
+        """Метод для получения контекста страницы редактирования"""
         context_data = super().get_context_data(**kwargs)
         SubjectFormset = inlineformset_factory(Product, Version, form=VersionForm, extra=1)
         if self.request.method == 'POST':
@@ -51,6 +58,7 @@ class ProductUpdateView(UpdateView):
         return context_data
 
     def form_valid(self, form):
+        """Метод для проверки валидности формы и сохранения продукта, для проверки количества активных версий"""
         formset = self.get_context_data()['formset']
         self.object = form.save()
         if formset.is_valid():
