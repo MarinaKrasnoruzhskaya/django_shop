@@ -1,9 +1,10 @@
+from django.core.exceptions import ValidationError
 from django.forms import inlineformset_factory
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, TemplateView, CreateView, UpdateView
 
-from catalog.forms import ProductForm, VersionForm
+from catalog.forms import ProductForm, VersionForm, VersionFormset
 from catalog.models import Product, Contact, Version
 
 
@@ -50,24 +51,33 @@ class ProductUpdateView(UpdateView):
     def get_context_data(self, **kwargs):
         """Метод для получения контекста страницы редактирования"""
         context_data = super().get_context_data(**kwargs)
-        SubjectFormset = inlineformset_factory(Product, Version, form=VersionForm, extra=1)
+        ProductFormset = inlineformset_factory(Product, Version, form=VersionForm, formset=VersionFormset, extra=1)
         if self.request.method == 'POST':
-            context_data['formset'] = SubjectFormset(self.request.POST, instance=self.object)
+            context_data['formset'] = ProductFormset(self.request.POST, instance=self.object)
         else:
-            context_data['formset'] = SubjectFormset(instance=self.object)
+            context_data['formset'] = ProductFormset(instance=self.object)
         return context_data
 
-    def form_valid(self, form):
-        """Метод для проверки валидности формы и сохранения продукта, для проверки количества активных версий"""
-        formset = self.get_context_data()['formset']
+    def form_valid(self, form, **kwargs):
+        """Метод для проверки валидации формы"""
+        context_data = self.get_context_data()
+        formset = context_data['formset']
         self.object = form.save()
         if formset.is_valid():
             formset.instance = self.object
             formset.save()
-
+        else:
+            return super().form_invalid(form)
         return super().form_valid(form)
 
+    def form_invalid(self, form):
+        """Метод для отображения страницы редактирования с ошибками валидации"""
+        context_data = self.get_context_data()
+        formset = context_data['formset']
+        return self.render_to_response(self.get_context_data(form=form, formset=formset))
+
     def get_success_url(self):
+        """Метод для перехода на страницу продукта после его изменения"""
         return reverse('catalog:product_detail', args=[self.kwargs.get('pk')])
 
 

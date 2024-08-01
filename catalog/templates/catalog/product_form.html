@@ -31,6 +31,15 @@
             <div class="card">
                 <div class="card-body">
                     {{ formset.management_form }}
+                    {% if formset.errors %}
+                        <div class="alert alert-danger" role="alert">
+                            {% for dict in formset.errors %}
+                                {% for error in dict.values %}
+                                    {{ error }}
+                                {% endfor %}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
                     {% for form in formset.forms %}
                         {{ form.as_p }}
                         {% if not forloop.last %}

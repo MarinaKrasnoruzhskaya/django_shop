@@ -1,5 +1,6 @@
 from django import forms
-from django.forms import ModelForm, BooleanField
+from django.core.exceptions import ValidationError
+from django.forms import ModelForm, BooleanField, BaseInlineFormSet, CheckboxInput
 
 from catalog.models import Product, Version
 
@@ -9,9 +10,9 @@ class StyleFormMixin:
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
-            if  isinstance(field, BooleanField):
+            if isinstance(field, BooleanField):
                 field.widget.attrs['class'] = 'form-check-input'
-            else:
+            elif not isinstance(field, CheckboxInput):
                 field.widget.attrs['class'] = 'form-control'
 
 
@@ -50,3 +51,16 @@ class VersionForm(StyleFormMixin, ModelForm):
     class Meta:
         model = Version
         fields = '__all__'
+
+
+class VersionFormset(BaseInlineFormSet):
+    def clean(self):
+        """Метод для проверки условия, что количество активных версий мржет быть только одна"""
+        super().clean()
+        count = 0
+        for form in self.forms:
+            if form.instance.is_current_version:
+                count += 1
+                if count > 1:
+                    form.add_error(None, ValidationError("У продукта может быть только одна активная версия"))
+                    break
