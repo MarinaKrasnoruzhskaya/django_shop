@@ -7,6 +7,9 @@
 </div>
 
 <div class="container">
+    <div class="col-12 mb-5">
+        <a class="btn btn-danger" href="{% url 'catalog:product_create' %}" role="button">Добавить продукт</a>
+    </div>
     <div class="row text-center">
         {% for product in object_list %}
         <div class="col-4">
@@ -17,10 +20,12 @@
                 <img src="{{ product.preview | media_filter }}" class="card-img-top" alt="...">
                 <div class="card-body">
                     <p class="card-text"><i>{{ product.category }}</i></p>
+                    <p class="card-text">Версия: {{ product.active_version.name_version }}</p>
                     <p class="card-text">{{ product.description | truncatechars:100 }}</p>
                     <p class="card-text">Цена: {{ product.price }} руб.</p>
                     <div class="btn-group">
                         <a class="btn btn-outline-danger" href="{% url 'catalog:product_detail' product.pk %}" role="button">Подробнее</a>
+                        <a class="btn btn-outline-danger" href="{% url 'catalog:product_update' product.pk %}" role="button">Изменить</a>
                     </div>
                 </div>
             </div>

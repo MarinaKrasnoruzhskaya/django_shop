@@ -4,6 +4,7 @@ NULLABLE = {'blank': True, 'null': True}
 
 
 class Category(models.Model):
+    """Класс для категорий продуктов"""
     name = models.CharField(
         max_length=100,
         verbose_name='Название категории',
@@ -24,6 +25,7 @@ class Category(models.Model):
 
 
 class Product(models.Model):
+    """Класс для продуктов"""
     name = models.CharField(
         max_length=100,
         verbose_name='Название продукта',
@@ -64,7 +66,40 @@ class Product(models.Model):
         ordering = ('name',)
 
 
+class Version(models.Model):
+    """Класс для версии продукта"""
+    product = models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        verbose_name='Продукт',
+        help_text='Выберите продукт',
+        related_name='versions'
+    )
+    version_number = models.PositiveIntegerField(
+        verbose_name='Номер версии',
+        help_text='Введите номер версии'
+    )
+    name_version = models.CharField(
+        max_length=100,
+        verbose_name='Название версии',
+        help_text='Введите название версии'
+    )
+    is_current_version = models.BooleanField(
+        default=False,
+        verbose_name='Это текущая версия',
+        help_text='Установите текущую версию'
+    )
+
+    def __str__(self):
+        return f'{self.product.name} - {self.version_number}'
+
+    class Meta:
+        verbose_name = 'Версия продукта'
+        verbose_name_plural = 'Версии продукта'
+        ordering = ('-version_number',)
+
 class Contact(models.Model):
+    """Класс для контактов"""
     name = models.CharField(max_length=100, verbose_name='Имя', help_text='Введите имя',)
     phone = models.CharField(max_length=15, verbose_name='Телефон', help_text='Введите телефон',)
     message = models.TextField(verbose_name='Сообщение', help_text='Введите сообщение',)
