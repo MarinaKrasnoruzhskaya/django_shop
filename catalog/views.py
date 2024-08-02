@@ -42,6 +42,16 @@ class ProductCreateView(CreateView):
     form_class = ProductForm
     success_url = reverse_lazy("catalog:home")
 
+    def get_context_data(self, **kwargs):
+        """Метод для получения контекста страницы редактирования"""
+        context_data = super().get_context_data(**kwargs)
+        ProductFormset = inlineformset_factory(Product, Version, form=VersionForm, formset=VersionFormset, extra=1)
+        if self.request.method == 'POST':
+            context_data['formset'] = ProductFormset(self.request.POST, instance=self.object)
+        else:
+            context_data['formset'] = ProductFormset(instance=self.object)
+        return context_data
+
 
 class ProductUpdateView(UpdateView):
     """Контроллер для редактирования продукта"""
