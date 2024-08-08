@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ValidationError
 from django.forms import inlineformset_factory
 from django.shortcuts import render
@@ -20,7 +21,10 @@ class ProductListView(ListView):
             product.current_version = Version.objects.filter(product=product, is_current_version=True).first()
             if product.current_version:
                 product.active_version = product.current_version
-                active_product_list.append(product)
+                # active_product_list.append(product)
+            else:
+                product.active_version = None
+            active_product_list.append(product)
         context_data['object_list'] = active_product_list
         return context_data
 
@@ -36,7 +40,7 @@ class ProductDetailView(DetailView):
         return context_data
 
 
-class ProductCreateView(CreateView):
+class ProductCreateView(LoginRequiredMixin, CreateView):
     """Контроллер для добавления нового продукта"""
     model = Product
     form_class = ProductForm
@@ -52,8 +56,15 @@ class ProductCreateView(CreateView):
             context_data['formset'] = ProductFormset(instance=self.object)
         return context_data
 
+    def form_valid(self, form, **kwargs):
+        """Метод для автоматической привязки владельца продукта - пользователя"""
+        product = form.save()
+        product.user = self.request.user
+        product.save()
+        return super().form_valid(form)
 
-class ProductUpdateView(UpdateView):
+
+class ProductUpdateView(LoginRequiredMixin, UpdateView):
     """Контроллер для редактирования продукта"""
     model = Product
     form_class = ProductForm

@@ -20,7 +20,7 @@ class ProductForm(StyleFormMixin, ModelForm):
     """Форма для добавления нового продукта"""
     class Meta:
         model = Product
-        exclude = ('created_at', 'updated_at')
+        exclude = ('created_at', 'updated_at', 'user')
 
     FORBIDDEN_WORDS = [
         'казино', 'криптовалюта', 'крипта', 'биржа',
@@ -64,3 +64,5 @@ class VersionFormset(BaseInlineFormSet):
                 if count > 1:
                     form.add_error(None, ValidationError("У продукта может быть только одна активная версия"))
                     break
+                elif count == 0:
+                    form.add_error(None, ValidationError("Укажите актуальную версию продукта"))
