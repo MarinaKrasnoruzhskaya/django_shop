@@ -7,15 +7,25 @@
 <div class="container">
     <form class="row" method="post" enctype="multipart/form-data">
         <div class="col-6">
+            {% if user.is_authenticated %}
+            <h3 class="card-text">Редактирование профиля</h3>
+            {% else %}
             <h3 class="card-text">Создание пользователя</h3>
+            {% endif %}
             <div class="card">
                 <div class="card-body">
                     {% csrf_token %}
                     {{ form.as_p }}
                 </div>
+                {% if user.is_authenticated %}
+                <button type="submit" class="btn btn-danger">
+                    Обновить
+                </button>
+                {% else %}
                 <button type="submit" class="btn btn-danger">
                     Зарегистрироваться
                 </button>
+                {% endif %}
             </div>
         </div>
     </form>

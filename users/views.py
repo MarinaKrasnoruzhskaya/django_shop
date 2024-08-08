@@ -7,10 +7,10 @@ from django.core.exceptions import ValidationError
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, reverse_lazy
-from django.views.generic import CreateView
+from django.views.generic import CreateView, UpdateView
 
 from config import settings
-from users.forms import UserRegisterForm, UserRecoveryPasswordForm
+from users.forms import UserRegisterForm, UserRecoveryPasswordForm, UserProfileForm
 from users.models import User
 
 
@@ -72,3 +72,12 @@ class UserRecoveryPasswordView(PasswordResetView):
 
         return redirect(reverse('users:login'))
 
+
+class ProfileView(UpdateView):
+    """Контроллер для редактирования профиля пользователя"""
+    model = User
+    form_class = UserProfileForm
+    success_url = reverse_lazy('users:profile')
+
+    def get_object(self, queryset=None):
+        return self.request.user
