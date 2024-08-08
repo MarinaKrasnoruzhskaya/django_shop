@@ -1,0 +1,62 @@
+[
+  {
+    "model": "users.user",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$rZojaLGwfxy1iQt9gySXWY$X1pr1YKnuG52X8rEv4iVbrDHgxlMTssF0SpdLihHBh8=",
+      "last_login": "2024-08-08T21:04:16.881Z",
+      "is_superuser": true,
+      "first_name": "",
+      "last_name": "",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2024-08-07T20:12:03.127Z",
+      "email": "admin@sky.pro",
+      "phone_number": null,
+      "country": null,
+      "token": null,
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 2,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$8yvybKWkIReTPnHkF4THRU$3zG57K2AJmKR9itORrv3iJGNywm1TiWognpWK8pqj6Y=",
+      "last_login": "2024-08-08T20:46:36.916Z",
+      "is_superuser": false,
+      "first_name": "",
+      "last_name": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2024-08-07T20:15:18.927Z",
+      "email": "mitenkovamarina@yandex.ru",
+      "phone_number": null,
+      "country": null,
+      "token": "543542e4c1862d7ddb07a4fc28ec8d2e",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "users.user",
+    "pk": 3,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$VYPkJ0TmrACrxcfBbu4ITd$MV+lhSwdoGkf9TwkJVEa92JHrWcko5L4LNfWUTwSNg8=",
+      "last_login": "2024-08-08T21:28:18.875Z",
+      "is_superuser": false,
+      "first_name": "",
+      "last_name": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2024-08-08T21:02:08.229Z",
+      "email": "Krasnoruzhskayamarina@yandex.ru",
+      "phone_number": "+78008000008",
+      "country": "Россия",
+      "token": "3154c356c1b491f7f830345ec3032caa",
+      "groups": [],
+      "user_permissions": []
+    }
+  }
+]

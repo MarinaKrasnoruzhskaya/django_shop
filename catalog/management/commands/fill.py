@@ -5,6 +5,7 @@ from django.db import connection
 
 from blog.models import BlogPost
 from catalog.models import Product, Category, Contact, Version
+from users.models import User
 
 
 class Command(BaseCommand):
@@ -43,6 +44,45 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         """Метод для заполнения БД"""
+        User.objects.all().delete()
+        Command.truncate_table_restart_id('users', 'user')
+
+        user_for_create = []
+        for user in Command.json_read('users_data.json'):
+            # user_for_create.append(
+            #     User(
+            #         id=user["pk"],
+            #         password=user["fields"]["password"],
+            #         last_login=user["fields"]["last_login"],
+            #         is_superuser=user["fields"]["is_superuser"],
+            #         is_staff=user["fields"]["is_staff"],
+            #         is_active=user["fields"]["is_active"],
+            #         date_joined=user["fields"]["date_joined"],
+            #         email=user["fields"]["email"],
+            #         phone_number=user["fields"]["phone_number"],
+            #         country=user["fields"]["country"],
+            #         token=user["fields"]["token"],
+            #         groups=user["fields"]["groups"],
+            #         user_permissions=user["fields"]["user_permissions"],
+            #         first_name=user["fields"]["first_name"],
+            #         last_name=user["fields"]["last_name"],
+            #     )
+            # )
+            user_for_create.append(
+                User(
+                    id=user["pk"],
+                    password=user["fields"]["password"],
+                    is_superuser=user["fields"]["is_superuser"],
+                    is_staff=user["fields"]["is_staff"],
+                    is_active=user["fields"]["is_active"],
+                    email=user["fields"]["email"],
+                    phone_number=user["fields"]["phone_number"],
+                    country=user["fields"]["country"],
+                )
+            )
+
+        User.objects.bulk_create(user_for_create)
+        Command.select_setval_id('users', 'user')
 
         Product.objects.all().delete()
         Category.objects.all().delete()
@@ -73,7 +113,9 @@ class Command(BaseCommand):
                         preview=product["fields"]["preview"],
                         category=Category.objects.get(pk=product["fields"]["category"]),
                         price=product["fields"]["price"], created_at=product["fields"]["created_at"],
-                        updated_at=product["fields"]["updated_at"])
+                        updated_at=product["fields"]["updated_at"],
+                        user=User.objects.get(pk=product["fields"]["user"])
+                        )
             )
 
         Product.objects.bulk_create(product_for_create)
@@ -114,3 +156,5 @@ class Command(BaseCommand):
 
         BlogPost.objects.bulk_create(blogpost_for_create)
         Command.select_setval_id('blog', 'blogpost')
+
+

@@ -7,9 +7,11 @@
 </div>
 
 <div class="container">
+    {% if user.is_authenticated %}
     <div class="col-12 mb-5">
         <a class="btn btn-danger" href="{% url 'catalog:product_create' %}" role="button">Добавить продукт</a>
     </div>
+    {% endif %}
     <div class="row text-center">
         {% for product in object_list %}
         <div class="col-4">
@@ -20,12 +22,18 @@
                 <img src="{{ product.preview | media_filter }}" class="card-img-top" alt="...">
                 <div class="card-body">
                     <p class="card-text"><i>{{ product.category }}</i></p>
+                    {% if product.active_version %}
                     <p class="card-text">Версия: {{ product.active_version.name_version }}</p>
+                    {% else %}
+                    <p class="card-text">Версия: -</p>
+                    {% endif %}
                     <p class="card-text">{{ product.description | truncatechars:100 }}</p>
                     <p class="card-text">Цена: {{ product.price }} руб.</p>
                     <div class="btn-group">
                         <a class="btn btn-outline-danger" href="{% url 'catalog:product_detail' product.pk %}" role="button">Подробнее</a>
+                        {% if user.is_authenticated %}
                         <a class="btn btn-outline-danger" href="{% url 'catalog:product_update' product.pk %}" role="button">Изменить</a>
+                        {% endif %}
                     </div>
                 </div>
             </div>

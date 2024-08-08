@@ -1,5 +1,7 @@
 from django.db import models
 
+from users.models import User
+
 NULLABLE = {'blank': True, 'null': True}
 
 
@@ -57,6 +59,9 @@ class Product(models.Model):
     created_at = models.DateTimeField(verbose_name="Дата создания", auto_now_add=True)
     updated_at = models.DateTimeField(verbose_name="Дата последнего изменения", auto_now=True)
 
+    user = models.ForeignKey(User, verbose_name='Владелец', help_text='Укажите владельца', blank=True, null=True,
+                             on_delete=models.SET_NULL)
+
     def __str__(self):
         return self.name
 
@@ -98,11 +103,12 @@ class Version(models.Model):
         verbose_name_plural = 'Версии продукта'
         ordering = ('-version_number',)
 
+
 class Contact(models.Model):
     """Класс для контактов"""
-    name = models.CharField(max_length=100, verbose_name='Имя', help_text='Введите имя',)
-    phone = models.CharField(max_length=15, verbose_name='Телефон', help_text='Введите телефон',)
-    message = models.TextField(verbose_name='Сообщение', help_text='Введите сообщение',)
+    name = models.CharField(max_length=100, verbose_name='Имя', help_text='Введите имя', )
+    phone = models.CharField(max_length=15, verbose_name='Телефон', help_text='Введите телефон', )
+    message = models.TextField(verbose_name='Сообщение', help_text='Введите сообщение', )
 
     def __str__(self):
         return f'{self.name} - {self.phone}'
