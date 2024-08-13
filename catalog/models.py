@@ -59,8 +59,19 @@ class Product(models.Model):
     created_at = models.DateTimeField(verbose_name="Дата создания", auto_now_add=True)
     updated_at = models.DateTimeField(verbose_name="Дата последнего изменения", auto_now=True)
 
-    user = models.ForeignKey(User, verbose_name='Владелец', help_text='Укажите владельца', blank=True, null=True,
-                             on_delete=models.SET_NULL)
+    user = models.ForeignKey(
+        User,
+        verbose_name='Владелец',
+        help_text='Укажите владельца',
+        **NULLABLE,
+        on_delete=models.SET_NULL
+    )
+
+    is_published = models.BooleanField(
+        default=False,
+        verbose_name="Опубликовано",
+        help_text='Выберите статус публикации'
+    )
 
     def __str__(self):
         return self.name
@@ -69,6 +80,11 @@ class Product(models.Model):
         verbose_name = "Продукт"
         verbose_name_plural = "Продукты"
         ordering = ('name',)
+        permissions = [
+            ("can_cancel_publication", "Can cancel publication"),
+            ("can_change_description", "Can change the description"),
+            ("can_change_category", "Can change the category"),
+        ]
 
 
 class Version(models.Model):

@@ -1,11 +1,10 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.exceptions import ValidationError
+from django.core.exceptions import PermissionDenied
 from django.forms import inlineformset_factory
-from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
 from django.views.generic import ListView, DetailView, TemplateView, CreateView, UpdateView
 
-from catalog.forms import ProductForm, VersionForm, VersionFormset
+from catalog.forms import ProductForm, VersionForm, VersionFormset, ProductModeratorForm
 from catalog.models import Product, Contact, Version
 
 
@@ -43,7 +42,6 @@ class ProductDetailView(DetailView):
 class ProductCreateView(LoginRequiredMixin, CreateView):
     """Контроллер для добавления нового продукта"""
     model = Product
-    form_class = ProductForm
     success_url = reverse_lazy("catalog:home")
 
     def get_context_data(self, **kwargs):
@@ -100,6 +98,17 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         """Метод для перехода на страницу продукта после его изменения"""
         return reverse('catalog:product_detail', args=[self.kwargs.get('pk')])
+
+    def get_form_class(self):
+        """Метод для получения класса формы продукта в зависимости от прав доступа авторизованного пользователя"""
+        user = self.request.user
+        print(self.request)
+        if user == self.object.user:
+            return ProductForm
+        if user.has_perm("catalog.can_cancel_publication") and user.has_perm(
+                "catalog.can_change_description") and user.has_perm("catalog.can_change_category"):
+            return ProductModeratorForm
+        raise PermissionDenied
 
 
 class ContactsView(TemplateView):
