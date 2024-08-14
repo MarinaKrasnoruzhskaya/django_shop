@@ -10,6 +10,7 @@ from django.views.generic import ListView, DetailView, CreateView, UpdateView, D
 from dotenv import load_dotenv
 from pytils.translit import slugify
 
+from blog.forms import BlogPostForm, BlogPostUpdateForm
 from blog.models import BlogPost
 
 load_dotenv()
@@ -23,7 +24,7 @@ class BlogPostListView(ListView):
         """Метод возвращает для контент-менеджера все посты, для остальных пользователей только опубликованные"""
         queryset = super().get_queryset(*args, **kwargs)
         user = self.request.user
-        user_group = Group.objects.filter(user=user).first()
+        user_group = Group.objects.filter(user=user).first() if user.is_authenticated else []
         group = Group.objects.get(name='content-manager')
         if user_group and user_group.pk == group.pk or user.is_superuser:
             return queryset
@@ -37,7 +38,7 @@ class BlogPostDetailView(DetailView):
     model = BlogPost
 
     def get_object(self, queryset=None):
-        """Метод ведет подсчет количества просмотров и при достижении 100 просмотров отправляет сообщение"""
+        """Метод ведет подсчет количества просмотров и при достижении 100 просмотров отправляет сообщение автору"""
         self.object = super().get_object(queryset)
         self.object.views_count += 1
         self.object.save(update_fields=['views_count'])
@@ -47,21 +48,21 @@ class BlogPostDetailView(DetailView):
                 message=f"Поздравляем! Вашу запись {self.object.title} просмотрели {self.object.views_count} раз. "
                         f"С уважением Ваш Bow-shop!",
                 from_email=settings.EMAIL_HOST_USER,
-                recipient_list=[os.getenv("EMAIL_USER"),],
+                recipient_list=[self.object.author,],
             )
         return self.object
 
 
-class BlogPostCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView):
+class BlogPostCreateView(LoginRequiredMixin, CreateView):
     """Контроллер для создания поста"""
     model = BlogPost
-    fields = ('title', 'content', 'preview', 'is_published')
-    permission_required = 'blog.add_blogpost'
+    form_class = BlogPostForm
     success_url = reverse_lazy("blog:list")
 
     def form_valid(self, form):
         if form.is_valid():
             new_post = form.save()
+            new_post.author = self.request.user
             new_post.slug = slugify(new_post.title)
             new_post.save()
 
@@ -71,7 +72,7 @@ class BlogPostCreateView(LoginRequiredMixin, PermissionRequiredMixin, CreateView
 class BlogPostUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     """Контроллер для изменения поста"""
     model = BlogPost
-    fields = ('title', 'content', 'preview', 'is_published')
+    form_class = BlogPostUpdateForm
     permission_required = 'blog.change_blogpost'
 
     def form_valid(self, form):

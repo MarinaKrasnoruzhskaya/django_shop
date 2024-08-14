@@ -6,7 +6,7 @@
     <h3 class="display-0">техника, материалы, личный опыт </h3>
 </div>
 <div class="container">
-    {% if perms.blog.add_blogpost %}
+    {% if user.is_authenticated %}
     <div class="col-12 mb-5">
         <a class="btn btn-danger" href="{% url 'blog:create' %}" role="button">Добавить запись</a>
     </div>
@@ -21,6 +21,13 @@
                     <h3 class="mb-0">{{ object}}</h3>
                     <div class="mb-1 text-danger">{{ object.created_at | date:"SHORT_DATE_FORMAT" }}</div>
                     <p class="card-text text-left">{{ object.content | truncatechars:100 }}</p>
+                    {% if perms.blog.change_blogpost and not object.is_published %}
+                    <div class="row">
+                        <div class="col-5">
+                            <p class="p-1 mb-2 bg-warning text-warning-emphasis">НЕ ОПУБЛИКОВАНО</p>
+                        </div>
+                    </div>
+                    {% endif %}
                     <div class="btn-group">
                         <a class="btn btn-outline-danger" href="{% url 'blog:view' object.pk %}"
                            role="button">Подробнее</a>
@@ -33,6 +40,7 @@
                            role="button">Удалить</a>
                         {% endif %}
                     </div>
+
                 </div>
             </div>
         </div>
