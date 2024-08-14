@@ -1,13 +1,11 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.models import AnonymousUser
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.exceptions import PermissionDenied
 from django.forms import inlineformset_factory
 from django.urls import reverse_lazy, reverse
-from django.views.generic import ListView, DetailView, TemplateView, CreateView, UpdateView
+from django.views.generic import ListView, DetailView, TemplateView, CreateView, UpdateView, DeleteView
 
 from catalog.forms import ProductForm, VersionForm, VersionFormset, ProductModeratorForm
 from catalog.models import Product, Contact, Version
-from users.models import User
 
 
 class ProductListView(ListView):
@@ -131,6 +129,12 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
                 "catalog.can_change_description") and user.has_perm("catalog.can_change_category"):
             return ProductModeratorForm
         raise PermissionDenied
+
+
+class ProductDeleteView(DeleteView):
+    """Контроллер для удаления продукта"""
+    model = Product
+    success_url = reverse_lazy('catalog:home')
 
 
 class ContactsView(TemplateView):

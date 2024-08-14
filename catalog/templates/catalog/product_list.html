@@ -39,6 +39,9 @@
                         {% if perms.catalog.can_cancel_publication and perms.catalog.can_change_description and perms.catalog.can_change_category or user == product.user %}
                         <a class="btn btn-outline-danger" href="{% url 'catalog:product_update' product.pk %}" role="button">Изменить</a>
                         {% endif %}
+                        {% if user.is_superuser or user == product.user %}
+                        <a class="btn btn-outline-danger" href="{% url 'catalog:product_delete' product.pk %}" role="button">Удалить</a>
+                        {% endif %}
                         {% endif %}
                     </div>
                 </div>
