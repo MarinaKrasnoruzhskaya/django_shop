@@ -131,10 +131,16 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
         raise PermissionDenied
 
 
-class ProductDeleteView(DeleteView):
+class ProductDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     """Контроллер для удаления продукта"""
     model = Product
+    permission_required = 'catalog.delete_product'
     success_url = reverse_lazy('catalog:home')
+
+    def test_func(self):
+        """Vетод для проверки прав доступа на удаление продукта"""
+        product = Product.objects.get(pk=self.kwargs['pk'])
+        return self.request.user.is_superuser or self.request.user.pk == product.user.pk
 
 
 class ContactsView(TemplateView):
