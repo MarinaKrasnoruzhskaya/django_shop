@@ -138,7 +138,7 @@ class ProductDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     success_url = reverse_lazy('catalog:home')
 
     def test_func(self):
-        """Vетод для проверки прав доступа на удаление продукта"""
+        """Метод для проверки прав доступа на удаление продукта"""
         product = Product.objects.get(pk=self.kwargs['pk'])
         return self.request.user.is_superuser or self.request.user.pk == product.user.pk
 
