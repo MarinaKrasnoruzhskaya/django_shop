@@ -15,7 +15,11 @@
     <div class="row text-center">
         {% for product in object_list %}
         <div class="col-4">
+            {% if product.is_published %}
             <div class="card mb-4 box-shadow">
+            {% else %}
+            <div class="card border-warning mb-4 box-shadow">
+            {%endif %}
                 <div class="card-header">
                     <h5 class="my-0 font-weight-normal">{{ product.name }}</h5>
                 </div>
@@ -32,7 +36,12 @@
                     <div class="btn-group">
                         <a class="btn btn-outline-danger" href="{% url 'catalog:product_detail' product.pk %}" role="button">Подробнее</a>
                         {% if user.is_authenticated %}
+                        {% if perms.catalog.can_cancel_publication and perms.catalog.can_change_description and perms.catalog.can_change_category or user == product.user %}
                         <a class="btn btn-outline-danger" href="{% url 'catalog:product_update' product.pk %}" role="button">Изменить</a>
+                        {% endif %}
+                        {% if user.is_superuser or user == product.user %}
+                        <a class="btn btn-outline-danger" href="{% url 'catalog:product_delete' product.pk %}" role="button">Удалить</a>
+                        {% endif %}
                         {% endif %}
                     </div>
                 </div>

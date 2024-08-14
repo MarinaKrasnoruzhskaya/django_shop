@@ -1,11 +1,10 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.exceptions import ValidationError
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.core.exceptions import PermissionDenied
 from django.forms import inlineformset_factory
-from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
-from django.views.generic import ListView, DetailView, TemplateView, CreateView, UpdateView
+from django.views.generic import ListView, DetailView, TemplateView, CreateView, UpdateView, DeleteView
 
-from catalog.forms import ProductForm, VersionForm, VersionFormset
+from catalog.forms import ProductForm, VersionForm, VersionFormset, ProductModeratorForm
 from catalog.models import Product, Contact, Version
 
 
@@ -14,19 +13,39 @@ class ProductListView(ListView):
     model = Product
 
     def get_context_data(self, *args, **kwargs):
-        """Метод для получения списка продуктов активной версии"""
+        """Метод для получения списка продуктов активной версии с последующей выборкой
+        либо всех продуктов (для модератора),
+        либо опубликованные продукты других пользователей и все свои продукты (для владельца продуктов),
+        либо только опубликованные продукты (для всех остальных)"""
         context_data = super().get_context_data(*args, **kwargs)
         active_product_list = []
         for product in context_data['product_list']:
             product.current_version = Version.objects.filter(product=product, is_current_version=True).first()
             if product.current_version:
                 product.active_version = product.current_version
-                # active_product_list.append(product)
             else:
                 product.active_version = None
             active_product_list.append(product)
-        context_data['object_list'] = active_product_list
-        return context_data
+
+        user = self.request.user
+        user_products = user.product_set.all() if user.id else []
+        if user.has_perm("catalog.can_cancel_publication"):
+            context_data['object_list'] = active_product_list
+            return context_data
+        elif not user_products:
+            published_product_list = []
+            for product in active_product_list:
+                if product.is_published:
+                    published_product_list.append(product)
+            context_data['object_list'] = published_product_list
+            return context_data
+        else:
+            product_list = []
+            for product in active_product_list:
+                if product.is_published or product in user_products:
+                    product_list.append(product)
+            context_data['object_list'] = product_list
+            return context_data
 
 
 class ProductDetailView(DetailView):
@@ -100,6 +119,28 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         """Метод для перехода на страницу продукта после его изменения"""
         return reverse('catalog:product_detail', args=[self.kwargs.get('pk')])
+
+    def get_form_class(self):
+        """Метод для получения класса формы продукта в зависимости от прав доступа авторизованного пользователя"""
+        user = self.request.user
+        if user == self.object.user:
+            return ProductForm
+        if user.has_perm("catalog.can_cancel_publication") and user.has_perm(
+                "catalog.can_change_description") and user.has_perm("catalog.can_change_category"):
+            return ProductModeratorForm
+        raise PermissionDenied
+
+
+class ProductDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    """Контроллер для удаления продукта"""
+    model = Product
+    permission_required = 'catalog.delete_product'
+    success_url = reverse_lazy('catalog:home')
+
+    def test_func(self):
+        """Метод для проверки прав доступа на удаление продукта"""
+        product = Product.objects.get(pk=self.kwargs['pk'])
+        return self.request.user.is_superuser or self.request.user.pk == product.user.pk
 
 
 class ContactsView(TemplateView):

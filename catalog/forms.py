@@ -20,7 +20,7 @@ class ProductForm(StyleFormMixin, ModelForm):
     """Форма для добавления нового продукта"""
     class Meta:
         model = Product
-        exclude = ('created_at', 'updated_at', 'user')
+        exclude = ('created_at', 'updated_at', 'user', 'is_published')
 
     FORBIDDEN_WORDS = [
         'казино', 'криптовалюта', 'крипта', 'биржа',
@@ -35,6 +35,27 @@ class ProductForm(StyleFormMixin, ModelForm):
                 raise forms.ValidationError(f'Слово {word} нельзя использовать в названии продукта')
 
         return cleaned_data
+
+    def clean_description(self):
+        """Метод для проверки наличия запрещенных слов в описании продукта"""
+        cleaned_data = self.cleaned_data['description'].lower()
+        for word in self.FORBIDDEN_WORDS:
+            if word in cleaned_data:
+                raise forms.ValidationError(f'Слово {word} нельзя использовать в описании продукта')
+
+        return cleaned_data
+
+
+class ProductModeratorForm(StyleFormMixin, ModelForm):
+    """Форма продукта для модератора"""
+    class Meta:
+        model = Product
+        fields = ('description', 'category', 'is_published')
+
+    FORBIDDEN_WORDS = [
+        'казино', 'криптовалюта', 'крипта', 'биржа',
+        'дешево', 'бесплатно', 'обман', 'полиция', 'радар'
+    ]
 
     def clean_description(self):
         """Метод для проверки наличия запрещенных слов в описании продукта"""
