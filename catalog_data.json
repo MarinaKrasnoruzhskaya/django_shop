@@ -32,9 +32,10 @@
       "preview": "products/photo_2024-07-03_20-41-30.jpg",
       "category": 1,
       "price": 250,
-      "created_at": "2024-08-02T00:57:06.026Z",
-      "updated_at": "2024-08-08T20:59:45.092Z",
-      "user": 2
+      "created_at": "2024-08-13T20:58:40.223Z",
+      "updated_at": "2024-08-13T21:33:06.446Z",
+      "user": 2,
+      "is_published": true
     }
   },
   {
@@ -46,9 +47,10 @@
       "preview": "products/photo_2024-07-03_20-41-33.jpg",
       "category": 1,
       "price": 200,
-      "created_at": "2024-08-02T00:57:06.026Z",
-      "updated_at": "2024-08-08T20:59:38.778Z",
-      "user": 2
+      "created_at": "2024-08-13T20:58:40.223Z",
+      "updated_at": "2024-08-13T22:38:14.078Z",
+      "user": 2,
+      "is_published": true
     }
   },
   {
@@ -60,9 +62,10 @@
       "preview": "products/photo_2024-07-03_20-41-41.jpg",
       "category": 2,
       "price": 200,
-      "created_at": "2024-08-02T00:57:06.026Z",
-      "updated_at": "2024-08-08T21:04:31.309Z",
-      "user": 3
+      "created_at": "2024-08-13T20:58:40.223Z",
+      "updated_at": "2024-08-13T22:38:43.070Z",
+      "user": 3,
+      "is_published": true
     }
   },
   {
@@ -74,9 +77,10 @@
       "preview": "products/photo_2024-07-03_20-41-43.jpg",
       "category": 2,
       "price": 180,
-      "created_at": "2024-08-02T00:57:06.026Z",
-      "updated_at": "2024-08-08T21:04:38.412Z",
-      "user": 3
+      "created_at": "2024-08-13T20:58:40.223Z",
+      "updated_at": "2024-08-13T22:38:50.027Z",
+      "user": 3,
+      "is_published": true
     }
   },
   {
@@ -88,9 +92,10 @@
       "preview": "products/photo_2024-07-03_20-41-26.jpg",
       "category": 3,
       "price": 200,
-      "created_at": "2024-08-02T00:57:06.026Z",
-      "updated_at": "2024-08-08T21:00:05.100Z",
-      "user": 2
+      "created_at": "2024-08-13T20:58:40.223Z",
+      "updated_at": "2024-08-13T22:39:06.340Z",
+      "user": 2,
+      "is_published": true
     }
   },
   {
@@ -102,9 +107,10 @@
       "preview": "products/photo_2024-07-03_20-41-50.jpg",
       "category": 3,
       "price": 150,
-      "created_at": "2024-08-02T00:57:06.026Z",
-      "updated_at": "2024-08-08T21:00:11.081Z",
-      "user": 2
+      "created_at": "2024-08-13T20:58:40.223Z",
+      "updated_at": "2024-08-13T22:39:13.937Z",
+      "user": 2,
+      "is_published": true
     }
   },
   {
@@ -116,9 +122,10 @@
       "preview": "products/photo_2024-07-03_19-40-59.jpg",
       "category": 2,
       "price": 200,
-      "created_at": "2024-08-02T00:57:06.026Z",
-      "updated_at": "2024-08-08T21:04:45.044Z",
-      "user": 3
+      "created_at": "2024-08-13T20:58:40.223Z",
+      "updated_at": "2024-08-13T22:38:58.512Z",
+      "user": 3,
+      "is_published": true
     }
   },
   {
@@ -130,9 +137,25 @@
       "preview": "products/photo_2024-08-08_23-25-39_ID01Wxl.jpg",
       "category": 1,
       "price": 200,
-      "created_at": "2024-08-08T20:47:20.570Z",
-      "updated_at": "2024-08-08T21:29:18.307Z",
-      "user": 2
+      "created_at": "2024-08-13T20:58:40.223Z",
+      "updated_at": "2024-08-13T22:38:24.438Z",
+      "user": 2,
+      "is_published": true
+    }
+  },
+  {
+    "model": "catalog.product",
+    "pk": 9,
+    "fields": {
+      "name": "бантик-104",
+      "description": "выполнены из репсовой ленты и блестящего материала. \r\nкрепление - бесшовная резинка 4 см. \r\nвозможно исполнение в другом цвете. \r\nразмер - 7 на 9 см. \r\nцена указана за 1 шт.",
+      "preview": "products/photo_2024-08-14_00-29-04.jpg",
+      "category": 1,
+      "price": 250,
+      "created_at": "2024-08-13T21:30:21.762Z",
+      "updated_at": "2024-08-13T22:38:34.515Z",
+      "user": 2,
+      "is_published": false
     }
   },
   {
@@ -240,6 +263,16 @@
     "pk": 11,
     "fields": {
       "product": 8,
+      "version_number": 1,
+      "name_version": "1.0",
+      "is_current_version": true
+    }
+  },
+  {
+    "model": "catalog.version",
+    "pk": 12,
+    "fields": {
+      "product": 9,
       "version_number": 1,
       "name_version": "1.0",
       "is_current_version": true

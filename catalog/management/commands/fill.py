@@ -46,7 +46,6 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         """Метод для заполнения БД"""
 
-        User.objects.bulk_create(user_for_create)
         Command.select_setval_id('users', 'user')
 
         Product.objects.all().delete()
@@ -79,7 +78,8 @@ class Command(BaseCommand):
                         category=Category.objects.get(pk=product["fields"]["category"]),
                         price=product["fields"]["price"], created_at=product["fields"]["created_at"],
                         updated_at=product["fields"]["updated_at"],
-                        user=User.objects.get(pk=product["fields"]["user"])
+                        user=User.objects.get(pk=product["fields"]["user"]),
+                        is_published=product["fields"]["is_published"]
                         )
             )
 
