@@ -116,7 +116,8 @@ class Command(BaseCommand):
                          content=blogpost["fields"]["content"], preview=blogpost["fields"]["preview"],
                          is_published=blogpost["fields"]["is_published"],
                          views_count=blogpost["fields"]["views_count"],
-                         created_at=blogpost["fields"]["created_at"])
+                         created_at=blogpost["fields"]["created_at"],
+                         author=User.objects.get(pk=blogpost["fields"]["author"]))
             )
 
         BlogPost.objects.bulk_create(blogpost_for_create)
