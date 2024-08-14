@@ -6,9 +6,11 @@
     <h3 class="display-0">техника, материалы, личный опыт </h3>
 </div>
 <div class="container">
+    {% if perms.blog.add_blogpost %}
     <div class="col-12 mb-5">
         <a class="btn btn-danger" href="{% url 'blog:create' %}" role="button">Добавить запись</a>
     </div>
+    {% endif %}
 </div>
 <div class="container">
     <div class="row">
@@ -22,10 +24,14 @@
                     <div class="btn-group">
                         <a class="btn btn-outline-danger" href="{% url 'blog:view' object.pk %}"
                            role="button">Подробнее</a>
+                        {% if perms.blog.change_blogpost %}
                         <a class="btn btn-outline-danger" href="{% url 'blog:update' object.pk %}"
                            role="button">Изменить</a>
+                        {% endif %}
+                        {% if perms.blog.delete_blogpost %}
                         <a class="btn btn-outline-danger" href="{% url 'blog:delete' object.pk %}"
                            role="button">Удалить</a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
