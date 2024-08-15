@@ -69,8 +69,6 @@
     ```
 9. Заполнить БД
     ```sh
-   python manage.py loaddata auth_data.json
-   python manage.py loaddata users_data.json
    python manage.py fill
    ```
 10. В файле ```.env``` добавить настройки для яндекс-почты
