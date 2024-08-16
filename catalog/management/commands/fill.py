@@ -46,6 +46,24 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         """Метод для заполнения БД"""
+        # таблица contenttypes.contenttype
+
+        ContentType.objects.all().delete()
+        Command.truncate_table_restart_id('django', 'content_type')
+
+        contenttype_for_create = []
+
+        for content in Command.json_read_data('contenttypes_data.json', 'contenttypes', 'contenttype'):
+            contenttype_for_create.append(
+                ContentType(
+                    id=content["pk"],
+                    app_label=content["fields"]["app_label"],
+                    model=content["fields"]["model"])
+            )
+
+        ContentType.objects.bulk_create(contenttype_for_create)
+        Command.select_setval_id('django', 'content_type')
+
         # таблица auth.permission
 
         Permission.objects.all().delete()
