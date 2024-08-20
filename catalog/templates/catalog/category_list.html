@@ -1,0 +1,25 @@
+{% extends 'catalog/base.html' %}
+{% load my_tags %}
+{% block content %}
+<div class="pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+    <h1 class="display-4">Bow-shop</h1>
+    <p class="lead">Bow-shop - бантики для первых хвостиков и косичек</p>
+</div>
+
+<div class="container">
+    <div class="row text-center">
+        {% for category in object_list %}
+        <div class="col-4">
+            <div class="card mb-4 box-shadow">
+                <div class="card-header">
+                    <h5 class="my-0 font-weight-normal">{{ category.name }}</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">{{ category.description | truncatechars:100 }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
