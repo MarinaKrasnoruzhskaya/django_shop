@@ -6,12 +6,15 @@ from django.views.generic import ListView, DetailView, TemplateView, CreateView,
 
 from catalog.forms import ProductForm, VersionForm, VersionFormset, ProductModeratorForm
 from catalog.models import Product, Contact, Version, Category
-from catalog.services import get_categories_for_cache
+from catalog.services import get_categories_for_cache, get_products_for_cache
 
 
 class ProductListView(ListView):
     """Контроллер для списка продуктов"""
     model = Product
+
+    def get_queryset(self):
+        return get_products_for_cache()
 
     def get_context_data(self, *args, **kwargs):
         """Метод для получения списка продуктов активной версии с последующей выборкой
@@ -19,8 +22,9 @@ class ProductListView(ListView):
         либо опубликованные продукты других пользователей и все свои продукты (для владельца продуктов),
         либо только опубликованные продукты (для всех остальных)"""
         context_data = super().get_context_data(*args, **kwargs)
+        product_list = self.get_queryset()
         active_product_list = []
-        for product in context_data['product_list']:
+        for product in product_list:
             product.current_version = Version.objects.filter(product=product, is_current_version=True).first()
             if product.current_version:
                 product.active_version = product.current_version
